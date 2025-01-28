@@ -1,0 +1,26 @@
+---- express.static() ---- 
+
+
+1: We can use this to provide static files.
+
+2: We don't need to write  seperate routes for every static files.
+
+3: We just put all static files together on some folder. For example folder called static.
+
+4: If the server get the request, It will search the files inside this folder. If the files names match it will provide the file.
+
+5: We can also add prefix route name to not others know our folder structure.We request the file with this prefix route and then we get the request by the prefix route and then proceed to serve static files.
+
+Example:
+
+Adding a Virtual Path Prefix
+You can use a virtual prefix to make the static files accessible at a specific path.
+
+Example:
+
+app.use('/static', express.static('public'));
+Now, the static files are accessible with the /static prefix:
+
+http://localhost:3000/static/style.css
+http://localhost:3000/static/images/logo.png
+

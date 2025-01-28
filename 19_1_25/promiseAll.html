@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <section id="profileWrapper">
+            <h1>User Details</h1>
+            <button id="btn">Get User Dashboard</button>
+            <section id="userInfo">
+                
+            </section>
+        </section>
+        <section id="postWrapper">
+            
+        </section>
+    </main>
+    <script>
+        let urlArr= urlGenerator(1);
+
+        function urlGenerator(userId){
+            return [`https://jsonplaceholder.typicode.com/users/${userId}`,`https://jsonplaceholder.typicode.com/posts?userId=${userId}`]
+        }
+
+        async function fetchData(url){
+
+            try{
+                let response = await fetch(url);
+            let data = await response.json();
+            return data;
+            }
+            catch(err){
+                alert(err)
+            }
+            
+        }
+
+        async function fetchDetails(){
+            
+
+            /* in normal way or dependent way
+            
+            let userInfo = await fetchData(urlArr[0]);
+            let postDetails = await fetchDataA(urlArr[1]);
+
+            */
+
+            // using promise.all()
+
+            try{
+                let responseArr = await Promise.all(urlArr.map((url)=>{
+                return fetchData(url)
+            }  ))
+            console.log(responseArr[1]);
+            
+
+            let postArr = await Promise.all(responseArr[1].map(async (obj,index)=>{
+                return {
+                    'id' : obj['id'],
+                    'title' : obj['title'],
+                    'comments' : await fetchData(`https://jsonplaceholder.typicode.com/comments?postId=${obj['id']}`)
+                }
+            })) 
+
+            let finalResult = {
+                'user' : responseArr[0],
+                'posts' : postArr
+            }
+            console.log(finalResult)
+
+            renderUserProfile(finalResult.user);
+            renderUserPost(finalResult.posts)
+            }
+            catch(err){
+                alert(err)
+            }
+        }
+
+        function renderUserProfile(userObject){
+            let newFragment = document.createDocumentFragment();
+            newFragment.innerHTML = `
+                <div class="infoItems">User Name : ${userObject.name}</div>
+                <div class="infoItems">User Mail : ${userObject.email}</div>
+                <div class="infoItems">User Number : ${userObject.phone}</div>
+            `
+            document.querySelector('#userInfo').appendChild(newFragment)
+        }
+
+        function renderUserPost(postArr){
+            let newFragment = document.createDocumentFragment();
+
+            postArr.forEach(element => {
+                let newDiv = document.createElement("div");
+
+                newDiv.innerHTML = `
+                    <h2>${element.title}</h2>
+                    <ul>
+                        ${element.comments.map((commentObj)=>{
+                            return `<li class = "listItems">${commentObj.body}</li>`
+                        }).join("")}
+                    </ul>
+                `
+                newFragment.appendChild(newDiv)
+            });
+  
+            document.querySelector('#postWrapper').appendChild(newFragment)
+        }
+
+        document.querySelector('#btn').addEventListener('click',fetchDetails);
+
+    </script>
+</body>
+</html>
