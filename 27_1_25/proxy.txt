@@ -1,0 +1,25 @@
+----- Proxy -----
+
+1: So, basically proxy is a middleman between client and the servers.
+
+2: There are two types of proxy. One is "Forward Proxy" and other is "Reverse Proxy".
+
+---- Forward Proxy ----
+
+1: Forward Proxy is for client side protection to hide the client details like IP address to the server.
+
+2: Forward Proxy is used to restrict our clients to visit certain apps like malicious apps.
+
+3: It's basically used on many companies to restrict their employees IP address. Instead it will share its IP Address.
+
+---- Reverse Proxy(Eg: Nginx) ----
+
+1: Reverse Proxy is a web server which determines the server destination among various servers.
+
+2: It is used to optimize load balancing.
+
+3: It is also used to response the static files instead of getting from the application servers.
+
+4: It is also used to cache data to reduce repeated sever calls.
+
+5: It is also take care of ssl.
